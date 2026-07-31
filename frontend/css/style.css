@@ -1,0 +1,307 @@
+/* ============================================
+   Bolsillo — Registro de gastos
+   Paleta: lavanda claro + violeta + verde/coral
+   ============================================ */
+
+:root {
+  --bg: #F6F3FF;
+  --card: #FFFFFF;
+  --ink: #221C35;
+  --ink-soft: #6E6785;
+  --violet: #6C4CF0;
+  --violet-soft: #EDE7FF;
+  --yellow: #FFC857;
+  --ingreso: #14B876;
+  --ingreso-bg: #E4FBF1;
+  --gasto: #FF5A6E;
+  --gasto-bg: #FFE9EC;
+  --stroke: #E7E2F7;
+
+  --font-display: "Baloo 2", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: var(--bg);
+  font-family: var(--font-body);
+  color: var(--ink);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* --- Manchas de color decorativas --- */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(2px);
+  z-index: 0;
+  opacity: 0.55;
+}
+.blob-a {
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle at 30% 30%, var(--yellow), transparent 70%);
+  top: -120px;
+  left: -100px;
+}
+.blob-b {
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle at 60% 60%, var(--violet-soft), transparent 70%);
+  bottom: -140px;
+  right: -120px;
+}
+
+/* --- Tarjeta principal --- */
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 28px;
+  padding: 32px 28px 28px;
+  box-shadow: 0 24px 60px -20px rgba(108, 76, 240, 0.25);
+}
+
+.card__header { margin-bottom: 24px; }
+
+.card__eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--violet);
+  background: var(--violet-soft);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.2;
+  margin: 0 0 6px;
+}
+
+.card__subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+/* --- Formulario --- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding-left: 2px;
+}
+
+select,
+input[type="date"] {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1.5px solid var(--stroke);
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+}
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%236E6785' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 34px;
+}
+
+select:focus-visible,
+input:focus-visible {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 4px var(--violet-soft);
+}
+
+/* --- Monto destacado --- */
+.amount-input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--violet-soft);
+  border: 1.5px solid transparent;
+  border-radius: 16px;
+  padding: 10px 16px;
+  transition: box-shadow 0.15s ease;
+}
+.amount-input:focus-within {
+  box-shadow: 0 0 0 4px rgba(108, 76, 240, 0.18);
+}
+
+.amount-input__prefix {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--violet);
+}
+
+.amount-input input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--ink);
+  min-width: 0;
+}
+.amount-input input::placeholder { color: #B7ADE0; }
+
+.amount-input__suffix {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--violet);
+  background: #fff;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+/* --- Selector Ingreso / Gasto --- */
+.tipo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tipo__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding-left: 2px;
+}
+
+.tipo__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.tipo__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 13px 10px;
+  border-radius: 16px;
+  border: 1.5px solid var(--stroke);
+  background: var(--bg);
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.tipo__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 14px;
+  background: rgba(255,255,255,0.6);
+  transition: all 0.15s ease;
+}
+
+.tipo__btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--violet-soft);
+}
+
+/* Ingreso: verde */
+.tipo__btn--ingreso:hover,
+.tipo__btn--ingreso:active {
+  background: var(--ingreso-bg);
+  border-color: var(--ingreso);
+  color: var(--ingreso);
+}
+.tipo__btn--ingreso:hover .tipo__icon,
+.tipo__btn--ingreso:active .tipo__icon {
+  background: var(--ingreso);
+  color: #fff;
+}
+
+/* Gasto: coral */
+.tipo__btn--gasto:hover,
+.tipo__btn--gasto:active {
+  background: var(--gasto-bg);
+  border-color: var(--gasto);
+  color: var(--gasto);
+}
+.tipo__btn--gasto:hover .tipo__icon,
+.tipo__btn--gasto:active .tipo__icon {
+  background: var(--gasto);
+  color: #fff;
+}
+
+/* --- Botón de envío --- */
+.submit-btn {
+  margin-top: 4px;
+  border: none;
+  border-radius: 16px;
+  padding: 15px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--violet), #8A6FF7);
+  cursor: pointer;
+  box-shadow: 0 12px 24px -10px rgba(108, 76, 240, 0.55);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px -10px rgba(108, 76, 240, 0.6);
+}
+.submit-btn:active { transform: translateY(0); }
+
+/* --- Responsive --- */
+@media (max-width: 420px) {
+  .card { padding: 26px 20px 22px; border-radius: 22px; }
+  .card__title { font-size: 22px; }
+  .field-row { grid-template-columns: 1fr; }
+}
