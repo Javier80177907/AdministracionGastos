@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registrar movimiento · Bolsillo</title>
+<title>Iniciar sesión · Bolsillo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -17,64 +17,50 @@
 
     <header class="card__header">
       <span class="card__eyebrow">Bolsillo</span>
-      <h1 class="card__title">¿Qué movió tu plata hoy?</h1>
-      <p class="card__subtitle">Registra el monto, la categoría y la fecha en segundos.</p>
+      <h1 class="card__title">Qué gusto verte de nuevo</h1>
+      <p class="card__subtitle">Inicia sesión para seguir el rastro de tu plata.</p>
     </header>
 
     <form class="form" action="#" method="post">
 
-      <div class="field field--amount">
-        <label for="monto">Monto</label>
-        <div class="amount-input">
-          <span class="amount-input__prefix">$</span>
-          <input type="number" id="monto" name="monto" placeholder="0" inputmode="decimal" min="0" step="1000">
-          <span class="amount-input__suffix">COP</span>
-        </div>
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
       </div>
 
-      <div class="field-row">
-        <div class="field">
-          <label for="categoria">Categoría</label>
-          <select id="categoria" name="categoria">
-            <option value="" selected disabled>Elige una</option>
-            <option value="comida">🍔 Comida</option>
-            <option value="transporte">🚌 Transporte</option>
-            <option value="estudio">📚 Estudio</option>
-            <option value="salidas">🎉 Salidas</option>
-            <option value="suscripciones">📱 Suscripciones</option>
-            <option value="hogar">🏠 Hogar</option>
-            <option value="salario">💼 Salario</option>
-            <option value="otro">✨ Otro</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="fecha">Fecha</label>
-          <input type="date" id="fecha" name="fecha">
-        </div>
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
       </div>
 
-      <div class="tipo">
-        <span class="tipo__label">Tipo de movimiento</span>
-
-        <div class="tipo__grid">
-          <button type="button" class="tipo__btn tipo__btn--ingreso">
-            <span class="tipo__icon">＋</span>
-            Ingreso
-          </button>
-
-          <button type="button" class="tipo__btn tipo__btn--gasto">
-            <span class="tipo__icon">－</span>
-            Gasto
-          </button>
-        </div>
+      <div class="form__extra">
+        <label class="checkbox">
+          <input type="checkbox" id="recordar" name="recordar">
+          <span>Recordarme</span>
+        </label>
+        <a href="#" class="link-muted">¿Olvidaste tu contraseña?</a>
       </div>
 
-      <button type="submit" class="submit-btn">Guardar movimiento</button>
+      <button type="submit" class="submit-btn">Iniciar sesión</button>
+
+      <p class="form__footer">
+        ¿Aún no tienes cuenta? <a href="registro.html" class="link-strong">Regístrate</a>
+      </p>
 
     </form>
 
   </main>
+
+  <script>
+    document.querySelector('.form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
+       // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
+       // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
+       // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
+      window.location.href = 'registrarmovi.html';
+    });
+  </script>
 
 </body>
 </html>
