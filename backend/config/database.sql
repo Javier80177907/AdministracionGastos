@@ -1,6 +1,6 @@
-CREATE DATABASE database;
+CREATE DATABASE base;
 
-USE database;
+USE base;
 
 CREATE TABLE usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
