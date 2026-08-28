@@ -1,9 +1,22 @@
 const model = require('../model/gastos.model')
 
-calss GastosController{
+class GastosController{
 
-static async consultarGastos()
+static async consultarGastos(request,response){ 
+
+    const movimiento = await model.consultarGastos()
 
 
+    response.status(200).json({
+        data: movimiento
+
+    }
+
+    )
+}
 
 }
+
+module.exports = GastosController
+
+

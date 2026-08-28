@@ -7,7 +7,7 @@ class GastosModel{
 
     static async consultarGastos(){
 
-      const resultados  = await db.query("SELECT * FROM movimiento")
+      const [resultados]  = await db.query("SELECT * FROM movimiento")
        
       return resultados
       
@@ -17,3 +17,4 @@ class GastosModel{
 
 }
 
+module.exports = GastosModel 

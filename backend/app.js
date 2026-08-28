@@ -1,6 +1,6 @@
 const express = require ('express')
 const app = express()
-const router = require("./routes/routers")
+const router = require("./routes/router")
 
     const puerto = 4000
 
