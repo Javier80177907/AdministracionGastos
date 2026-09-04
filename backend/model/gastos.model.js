@@ -15,6 +15,19 @@ class GastosModel{
 
     }
 
+ static async consultarCategoria(){
+
+      const [resultados]  = await db.query("SELECT * FROM categoria")
+       
+      return resultados
+      
+
+
+    }
+
+
+
+
 }
 
 module.exports = GastosModel 
