@@ -1,71 +1,249 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Iniciar sesión · Bolsillo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Resumen sencillo de tus gastos">
+	<title>Gestor de gastos</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+	<main class="shell">
+		<header class="topbar">
+			<a class="brand" href="./" aria-label="Inicio del gestor de gastos">
+				<span class="brand-mark">$</span>
+				<span>gestor<span class="brand-accent">.</span></span>
+			</a>
+			<span class="status"><span class="status-dot"></span>Panel personal</span>
+		</header>
 
-  <div class="blob blob-a"></div>
-  <div class="blob blob-b"></div>
+		<section class="entry-card" aria-labelledby="entryTitle">
+			<div class="entry-heading">
+				<p class="eyebrow">Registro rápido</p>
+				<h1 id="entryTitle">Administración de gastos</h1>
+				<p>Registra tus ingresos y gastos con claridad y estilo.</p>
+			</div>
+			<form class="expense-form">
+				<label for="amountInput">Monto</label>
+				<div class="input-shell amount-input">
+					<span aria-hidden="true">$</span>
+					<input id="amountInput" name="monto" type="number" min="0" step="0.01" placeholder="Ej. 250000">
+				</div>
 
-  <main class="card">
+				<label for="dateInput">Fecha</label>
+				<input id="dateInput" name="fecha" type="date">
 
-    <header class="card__header">
-      <span class="card__eyebrow">Bolsillo</span>
-      <h1 class="card__title">Qué gusto verte de nuevo</h1>
-      <p class="card__subtitle">Inicia sesión para seguir el rastro de tu plata.</p>
-    </header>
+				<label for="categoryInput">Categoría</label>
+				<select id="categoryInput" name="categoria">
+					
+				</select>
 
-    <form class="form" action="#" method="post">
+				<div class="entry-actions">
+					<button class="entry-button income-button" type="button">Ingreso</button>
+					<button class="entry-button expense-button" type="button">Gasto</button>
+				</div>
+			</form>
+		</section>
 
-      <div class="field">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
-      </div>
+		<section class="intro">
+			<div>
+				<p class="eyebrow">Resumen financiero</p>
+				<h1>Tus gastos, <em>bajo control.</em></h1>
+				<p class="intro-copy">Consulta tus movimientos y entiende en qué estás usando tu dinero.</p>
+			</div>
+			<button class="refresh-button" id="refreshButton" type="button" title="Actualizar gastos">
+				<span aria-hidden="true">↻</span> Actualizar
+			</button>
+		</section>
 
-      <div class="field">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" name="password" placeholder="••••••••" required>
-      </div>
+		<section class="summary" aria-label="Resumen de gastos">
+			<article class="summary-card summary-total">
+				<span class="card-label">Total registrado</span>
+				<strong id="totalAmount">$ 0</strong>
+				<span class="card-note">Todos los movimientos</span>
+			</article>
+			<article class="summary-card">
+				<span class="card-label">Movimientos</span>
+				<strong id="movementCount">0</strong>
+				<span class="card-note">Gastos encontrados</span>
+			</article>
+			<article class="summary-card">
+				<span class="card-label">Promedio</span>
+				<strong id="averageAmount">$ 0</strong>
+				<span class="card-note">Por movimiento</span>
+			</article>
+		</section>
 
-      <div class="form__extra">
-        <label class="checkbox">
-          <input type="checkbox" id="recordar" name="recordar">
-          <span>Recordarme</span>
-        </label>
-        <a href="#" class="link-muted">¿Olvidaste tu contraseña?</a>
-      </div>
+		<section class="movements" aria-labelledby="movementsTitle">
+			<div class="section-heading">
+				<div>
+					<p class="eyebrow">Actividad reciente</p>
+					<h2 id="movementsTitle">Movimientos</h2>
+				</div>
+				<label class="search-box">
+					<span aria-hidden="true">⌕</span>
+					<input id="searchInput" type="search" placeholder="Buscar descripción..." aria-label="Buscar gastos">
+				</label>
+			</div>
 
-      <button type="submit" class="submit-btn">Iniciar sesión</button>
+			<div id="feedback" class="feedback" role="status">Cargando gastos...</div>
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Descripción</th>
+							<th>Fecha</th>
+							<th>Categoría</th>
+							<th class="amount-column">Monto</th>
+						</tr>
+					</thead>
+					<tbody id="expensesBody"></tbody>
+				</table>
+			</div>
+		</section>
+		<footer>Gestor de gastos <span>·</span> Datos sincronizados con tu base de datos</footer>
+	</main>
+	<script>
+		const API_URL = "http://localhost:4000/api/gasto";
+		const CATEGORY_API_URL = "http://localhost:4000/api/categoria";
+		let expenses = [];
+		let selectedType = "GASTO";
 
-      <p class="form__footer">
-        ¿Aún no tienes cuenta? <a href="registro.html" class="link-strong">Regístrate</a>
-      </p>
+		const formatMoney = (value) => new Intl.NumberFormat("es-CO", {
+			style: "currency", currency: "COP", maximumFractionDigits: 0
+		}).format(Number(value) || 0);
 
-    </form>
+		function normalizeExpenses(payload) {
+			const data = payload && payload.data;
+			if (Array.isArray(data) && Array.isArray(data[0])) return data[0];
+			return Array.isArray(data) ? data : [];
+		}
 
-  </main>
+		function getCategoryName(expense) {
+			if (expense?.nombre_categoria) return expense.nombre_categoria;
+			if (expense?.categoria) return expense.categoria;
+			if (expense?.nombre) return expense.nombre;
+			return `Categoría ${expense?.id_categoria || "--"}`;
+		}
 
-  <script>
-    document.querySelector('.form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
-       // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
-       // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
-       
-       // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
-       // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
-       // OJO SOLO DE PRUEBA CAMIAR AL CONECTAR BASE 
-      window.location.href = 'registrarmovi.html';
+		function updateTypeButtons() {
+			const buttons = document.querySelectorAll(".entry-button");
+			buttons.forEach((button) => {
+				const isActive = button.dataset.type === selectedType;
+				button.classList.toggle("is-selected", isActive);
+				button.setAttribute("aria-pressed", String(isActive));
+			});
+		}
 
+		function render() {
+			const query = document.querySelector("#searchInput").value.toLowerCase().trim();
+			const filtered = expenses.filter((expense) => {
+				const description = String(expense.descripcion || `${expense.tipo === "INGRESO" ? "Ingreso" : "Gasto"} ${getCategoryName(expense)}` || "");
+				return description.toLowerCase().includes(query) || String(getCategoryName(expense)).toLowerCase().includes(query);
+			});
+			const total = expenses.reduce((sum, expense) => sum + Number(expense.monto || 0), 0);
+			document.querySelector("#totalAmount").textContent = formatMoney(total);
+			document.querySelector("#movementCount").textContent = expenses.length;
+			document.querySelector("#averageAmount").textContent = formatMoney(expenses.length ? total / expenses.length : 0);
+			document.querySelector("#feedback").textContent = expenses.length ? `${filtered.length} movimiento${filtered.length === 1 ? "" : "s"}` : "No hay gastos registrados todavía.";
+			document.querySelector("#feedback").classList.toggle("is-error", false);
+			document.querySelector("#expensesBody").innerHTML = filtered.map((expense) => {
+				const description = expense.descripcion || `${expense.tipo === "INGRESO" ? "Ingreso" : "Gasto"} ${getCategoryName(expense)}`;
+				const date = expense.fecha ? new Date(expense.fecha).toLocaleDateString("es-CO", { day: "2-digit", month: "short", year: "numeric" }) : "--";
+				const category = getCategoryName(expense);
+				return `
+					<tr>
+						<td><span class="expense-name">${description}</span><small>#${expense.id_movimiento || expense.id_gasto || "--"}</small></td>
+						<td>${date}</td>
+						<td><span class="category">${category}</span></td>
+						<td class="amount-column amount">${formatMoney(expense.monto)}</td>
+					</tr>`;
+			}).join("");
+		}
 
-    });
-  </script>
+		async function loadExpenses() {
+			const feedback = document.querySelector("#feedback");
+			feedback.textContent = "Cargando gastos...";
+			feedback.classList.remove("is-error");
+			try {
+				const response = await fetch(API_URL);
+				if (!response.ok) throw new Error("No se pudo consultar la API");
+				expenses = normalizeExpenses(await response.json()).map((expense) => ({
+					...expense,
+					descripcion: expense.descripcion || `${expense.tipo === "INGRESO" ? "Ingreso" : "Gasto"} ${getCategoryName(expense)}`
+				}));
+				render();
+			} catch (error) {
+				expenses = [];
+				feedback.textContent = "No se pudo conectar con el backend. Verifica que esté activo en el puerto 4000.";
+				feedback.classList.add("is-error");
+				render();
+			}
+		}
 
+		document.querySelector(".expense-form").addEventListener("submit", async (event) => {
+			event.preventDefault();
+			const form = event.currentTarget;
+			const amountInput = form.querySelector("#amountInput");
+			const dateInput = form.querySelector("#dateInput");
+			const categoryInput = form.querySelector("#categoryInput");
+			const feedback = document.querySelector("#feedback");
+
+			const monto = Number(amountInput.value);
+			const fecha = dateInput.value;
+			const id_categoria = Number(categoryInput.value);
+
+			if (!monto || !fecha || !id_categoria) {
+				feedback.textContent = "Completa el monto, la fecha y la categoría antes de guardar.";
+				feedback.classList.add("is-error");
+				return;
+			}
+
+			try {
+				feedback.textContent = "Guardando movimiento...";
+				feedback.classList.remove("is-error");
+
+				const response = await fetch(API_URL, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						monto,
+						fecha,
+						tipo: selectedType,
+						id_usuario: 1,
+						id_categoria
+					})
+				});
+
+				if (!response.ok) {
+					throw new Error("No se pudo guardar el registro");
+				}
+
+				form.reset();
+				selectedType = "GASTO";
+				updateTypeButtons();
+				await loadExpenses();
+			} catch (error) {
+				feedback.textContent = "No se pudo guardar el movimiento. Intenta nuevamente.";
+				feedback.classList.add("is-error");
+			}
+		});
+
+		document.querySelectorAll(".entry-button").forEach((button) => {
+			button.addEventListener("click", () => {
+				selectedType = button.dataset.type;
+				updateTypeButtons();
+			});
+		});
+
+		document.querySelector("#searchInput").addEventListener("input", render);
+		document.querySelector("#refreshButton").addEventListener("click", loadExpenses);
+		updateTypeButtons();
+		loadExpenses();
+	</script>
+	<script src="js/consumo.js"></script>
 </body>
 </html>
